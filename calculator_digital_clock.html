@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator & Clock</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="calculator">
+        <div class="screen">
+          <div class="operation-indicator" id="operation">&#8203;</div>
+          <div class="display" id="display">0</div>
+        </div>
+        <div class="buttons">
+          <button class="clear" onclick="clearDisplay()">C</button>
+          <button class="backspace" onclick="backspace()">←</button>
+          <button class="operator" onclick="appendOperator('/')">/</button>
+          <button class="operator" onclick="appendOperator('*')">×</button>
+
+          <button class="number" onclick="appendNumber('7')">7</button>
+          <button class="number" onclick="appendNumber('8')">8</button>
+          <button class="number" onclick="appendNumber('9')">9</button>
+          <button class="operator" onclick="appendOperator('-')">−</button>
+
+          <button class="number" onclick="appendNumber('4')">4</button>
+          <button class="number" onclick="appendNumber('5')">5</button>
+          <button class="number" onclick="appendNumber('6')">6</button>
+          <button class="operator" onclick="appendOperator('+')">+</button>
+
+          <button class="number" onclick="appendNumber('1')">1</button>
+          <button class="number" onclick="appendNumber('2')">2</button>
+          <button class="number" onclick="appendNumber('3')">3</button>
+          <button class="equals" onclick="calculate()">=</button>
+
+          <button class="number zero" onclick="appendNumber('0')">0</button>
+          <button class="decimal" onclick="appendDecimal()">.</button>
+        </div>
+      </div>
+
+      <div class="clock-container">
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+          🌙
+        </button>
+        <div class="time" id="time">00:00:00</div>
+        <div class="date" id="date">January 1, 2024</div>
+        <div class="day" id="day">Monday</div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <p>
+        Submitted by: Algarme, Dingle, Dosdos | &copy; 2025 All Rights Reserved.
+      </p>
+    </footer>
+    <script>
+      // Calculator Functions
+      let currentInput = "0";
+      let previousInput = "";
+      let operation = null;
+
+      function updateDisplay() {
+        document.getElementById("display").textContent = currentInput;
+      }
+
+      function updateOperationIndicator() {
+        const operationElement = document.getElementById("operation");
+        if (operation && previousInput) {
+          const opSymbol =
+            {
+              "+": "+",
+              "-": "−",
+              "*": "×",
+              "/": "÷",
+            }[operation] || operation;
+          operationElement.textContent = `${previousInput} ${opSymbol}`;
+        } else {
+          operationElement.innerHTML = "&#8203;";
+        }
+      }
+
+      function appendNumber(number) {
+        if (currentInput === "0") {
+          currentInput = number;
+        } else {
+          currentInput += number;
+        }
+        updateDisplay();
+      }
+
+      function appendDecimal() {
+        if (!currentInput.includes(".")) {
+          currentInput += ".";
+          updateDisplay();
+        }
+      }
+
+      function appendOperator(op) {
+        if (operation !== null) {
+          calculate();
+        }
+        previousInput = currentInput;
+        currentInput = "0";
+        operation = op;
+        updateOperationIndicator();
+      }
+
+      function calculate() {
+        if (operation === null || previousInput === "") {
+          return;
+        }
+
+        const prev = parseFloat(previousInput);
+        const current = parseFloat(currentInput);
+        let result;
+
+        switch (operation) {
+          case "+":
+            result = prev + current;
+            break;
+          case "-":
+            result = prev - current;
+            break;
+          case "*":
+            result = prev * current;
+            break;
+          case "/":
+            if (current === 0) {
+              alert("Cannot divide by zero!");
+              clearDisplay();
+              return;
+            }
+            result = prev / current;
+            break;
+          default:
+            return;
+        }
+
+        currentInput = result.toString();
+        operation = null;
+        previousInput = "";
+        updateDisplay();
+        updateOperationIndicator();
+      }
+
+      function clearDisplay() {
+        currentInput = "0";
+        previousInput = "";
+        operation = null;
+        updateDisplay();
+        updateOperationIndicator();
+      }
+
+      function backspace() {
+        if (currentInput.length > 1) {
+          currentInput = currentInput.slice(0, -1);
+        } else {
+          currentInput = "0";
+        }
+        updateDisplay();
+      }
+
+      // Clock Functions
+      function updateClock() {
+        const now = new Date();
+
+        // Time (24-hour format)
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+
+        // Add leading zeros
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        const timeString = `${hours}<span class="colon">:</span>${minutes}<span class="colon">:</span>${seconds}`;
+        document.getElementById("time").innerHTML = timeString;
+
+        // Date
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        const dateString = now.toLocaleDateString("en-US", options);
+        document.getElementById("date").textContent = dateString;
+
+        // Day
+        const days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const dayString = days[now.getDay()];
+        document.getElementById("day").textContent = dayString;
+      }
+
+      function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+        const themeToggle = document.getElementById("themeToggle");
+
+        if (document.body.classList.contains("dark-mode")) {
+          themeToggle.textContent = "☀️";
+        } else {
+          themeToggle.textContent = "🌙";
+        }
+      }
+
+      // Initialize
+      updateClock();
+      setInterval(updateClock, 1000);
+    </script>
+  </body>
+</html>

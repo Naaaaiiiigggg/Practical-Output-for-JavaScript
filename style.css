@@ -1,0 +1,331 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* ********** BODY AND CONTAINER ADJUSTMENT ********** */
+    /* Ginamit mo ang body para i-center. Gagamitin natin ito para i-contain ang footer */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        
+        /* I-alis ang justify/align-items dito para ilipat sa container */
+        min-height: 100vh;
+        background: #f5f5f5;
+        padding: 20px;
+        transition: background 0.3s ease;
+        
+        /* Idagdag ang Flexbox para sa Sticky Footer */
+        display: flex;
+        flex-direction: column; /* Stack ang container at footer */
+    }
+
+    body.dark-mode {
+        background: #1a1a1a;
+    }
+
+    .container {
+        /* Ibalik ang original centering styles mo at kunin ang natitirang space */
+        flex-grow: 1; /* Para itulak ang footer pababa */
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center; /* Original centering style */
+        align-items: center; /* Original centering style */
+        padding: 20px 0; /* Add vertical padding for breathing room */
+    }
+
+    /* Calculator Styles (Wala akong binago dito) */
+    .calculator {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        width: 320px;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body.dark-mode .calculator {
+        background: #2a2a2a;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .screen {
+        background: #fafafa;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    body.dark-mode .screen {
+        background: #1a1a1a;
+        border-color: #424242;
+    }
+
+    .operation-indicator {
+        color: #9e9e9e;
+        font-size: 1em;
+        text-align: right;
+        min-height: 24px;
+        margin-bottom: 8px;
+        font-weight: 400;
+        transition: color 0.3s ease;
+    }
+
+    body.dark-mode .operation-indicator {
+        color: #808080;
+    }
+
+    .display {
+        color: #212121;
+        font-size: 2.5em;
+        text-align: right;
+        min-height: 50px;
+        word-wrap: break-word;
+        word-break: break-all;
+        font-weight: 300;
+        transition: color 0.3s ease;
+    }
+
+    body.dark-mode .display {
+        color: #ffffff;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+
+    button {
+        padding: 20px;
+        font-size: 1.3em;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: 400;
+        background: #fafafa;
+        color: #212121;
+    }
+
+    body.dark-mode button {
+        background: #1a1a1a;
+        color: #ffffff;
+    }
+
+    button:hover {
+        background: #eeeeee;
+        transform: translateY(-1px);
+    }
+
+    body.dark-mode button:hover {
+        background: #333333;
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    .operator {
+        background: #e8e8e8;
+        color: #424242;
+        font-weight: 500;
+    }
+
+    body.dark-mode .operator {
+        background: #424242;
+        color: #e0e0e0;
+    }
+
+    .operator:hover {
+        background: #d5d5d5;
+    }
+
+    body.dark-mode .operator:hover {
+        background: #525252;
+    }
+
+    .equals {
+        background: #212121;
+        color: #fff;
+        grid-row: span 2;
+        font-weight: 500;
+    }
+
+    body.dark-mode .equals {
+        background: #ffffff;
+        color: #212121;
+    }
+
+    .equals:hover {
+        background: #424242;
+    }
+
+    body.dark-mode .equals:hover {
+        background: #e0e0e0;
+    }
+
+    .clear {
+        background: #616161;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    body.dark-mode .clear {
+        background: #757575;
+    }
+
+    .clear:hover {
+        background: #757575;
+    }
+
+    body.dark-mode .clear:hover {
+        background: #9e9e9e;
+    }
+
+    .backspace {
+        background: #757575;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    body.dark-mode .backspace {
+        background: #616161;
+    }
+
+    .backspace:hover {
+        background: #9e9e9e;
+    }
+
+    body.dark-mode .backspace:hover {
+        background: #757575;
+    }
+
+    .zero {
+        grid-column: span 2;
+    }
+
+    /* Clock Styles (Wala akong binago dito) */
+    .clock-container {
+        background: #fff;
+        border-radius: 20px;
+        padding: 60px 80px;
+        box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body.dark-mode .clock-container {
+        background: #2a2a2a;
+        box-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .theme-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #e0e0e0;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        font-size: 1.5em;
+        transition: background 0.3s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .theme-toggle:hover {
+        transform: scale(1.1);
+    }
+
+    body.dark-mode .theme-toggle {
+        background: #424242;
+    }
+
+    .time {
+        font-size: 6em;
+        font-weight: 300;
+        color: #212121;
+        letter-spacing: 0.05em;
+        margin-bottom: 20px;
+        transition: color 0.3s ease;
+    }
+
+    body.dark-mode .time {
+        color: #ffffff;
+    }
+
+    .date {
+        font-size: 1.5em;
+        color: #757575;
+        font-weight: 400;
+        transition: color 0.3s ease;
+    }
+
+    body.dark-mode .date {
+        color: #b0b0b0;
+    }
+
+    .day {
+        font-size: 1.2em;
+        color: #9e9e9e;
+        margin-top: 10px;
+        font-weight: 300;
+        transition: color 0.3s ease;
+    }
+
+    body.dark-mode .day {
+        color: #808080;
+    }
+
+    .colon {
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        0%, 49% {
+            opacity: 1;
+        }
+        50%, 100% {
+            opacity: 0;
+        }
+    }
+
+    /* Responsive design (Wala akong binago dito) */
+    @media (max-width: 768px) {
+        .container {
+            flex-direction: column;
+        }
+        
+        .clock-container {
+            padding: 40px 50px;
+        }
+        
+        .time {
+            font-size: 4em;
+        }
+    }
+
+    /* ********** FOOTER STYLES (THE FIX) ********** */
+    .site-footer {
+        /* Ito ang mag-a-align ng footer sa gitna at hindi papatong sa content */
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+        color: #888;
+        font-size: 0.8em;
+        flex-shrink: 0; /* Huwag hayaan lumiit o umakyat */
+    }
+    
+    body.dark-mode .site-footer {
+        color: #555;
+    }
+</style>
